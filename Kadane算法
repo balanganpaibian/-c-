@@ -30,4 +30,5 @@ int main()
     printf("最大的连续子列和:%d\n",max);
     free(a);//记得要free
     return 0;
-}
+}//算法本质是判断cmax(current_max)是否为负，如果是负数的话，就抛弃，从下一个开始就行了。
+//全是负数的情况单独考虑
