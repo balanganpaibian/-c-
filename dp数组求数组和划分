@@ -1,0 +1,114 @@
+/*整数数列 a，先输入 a 的元素个数 n，再输入整数数列 a 的各元素（数组 a 中元素个数不超过 10 个），
+寻找是否有这样一种划分：将 a 中元素分为两组，使得这两组中的元素之和相等。
+若可以找到，输出 True，并写出一种划分（输出格式见样例）；若不能，输出 False。*/
+#include<stdio.h>
+int main()
+{
+    int a[10],num,i,j,k=0,sum=0;
+    printf("请输入数列元素个数");
+    scanf("%d",&num);
+    while(getchar()!='\n');
+    printf("请输入数列元素，空格隔开");
+    for(i=0;i<num;i++)
+    {
+        scanf("%d",&a[i]);//如果是指针不用加取地址符，example：scanf("%d",a+i)而且这个和前面的代码是等价的
+    }
+    for(i=0;i<num;i++)
+    {
+        sum+=a[i];
+    }
+    if(sum%2!=0)printf("False");
+    else
+    {
+for(i=0;i<num-1;i++)
+{
+    for(j=0;j<num-i-1;j++)//这一行和上面的两行是真正的冒泡排序法（注意两个变量的上下限），目的是通过俩俩交换达到对于这n个数的从小到大或者从大到小的排列
+    {
+        if(a[j]>a[j+1])
+        {
+            int t=a[j];
+            a[j]=a[j+1];
+            a[j+1]=t;
+        }
+    }
+}
+    /*for(i=0;i<num;i++)
+    {
+        int sum2=0;
+        sum2+=a[i];
+        if(sum2*2==sum)
+        {
+            printf("True\n(");
+            for(j=0;j<i;j++)
+            {
+                printf("%d,",a[j]);
+            }
+            printf(")");
+        }
+        else k=1;
+    }
+          if(k==1)printf("False");
+    }*/
+   //这个算法有问题，从小到大不行。
+int target = sum / 2;
+        int dp[target + 1];
+        for(i = 0; i <= target; i++) {
+            dp[i] = 0;
+        }//1-n都先赋值为0；
+        dp[0] = 1;  // 和为0总是可以达到
+    
+        // 构建DP表
+        for(i = 0; i < num; i++) 
+        {
+            for(j = target; j >= a[i]; j--) 
+            {
+                if(dp[j - a[i]])
+                 {
+                    dp[j] = 1;
+                }
+            }
+        }      
+        if(dp[target]) {  // 如果可以划分
+            printf("True\n");
+            
+            // 回溯找出一个划分方案
+            int selected[num];
+            for(i = 0; i < num; i++) selected[i] = 0;
+            
+            int remaining = target;
+            for(i = num - 1; i >= 0; i--) {
+                if(remaining >= a[i] && dp[remaining - a[i]]) {
+                    selected[i] = 1;
+                    remaining -= a[i];
+                }
+            }
+            
+            // 输出第一个子集
+            printf("(");
+            int first = 1;
+            for(i = 0; i < num; i++) {
+                if(selected[i]) {
+                    if(!first) printf(",");
+                    printf("%d", a[i]);
+                    first = 0;
+                }
+            }
+            printf(")\n");
+            
+            // 输出第二个子集
+            printf("(");
+            first = 1;
+            for(i = 0; i < num; i++) {
+                if(!selected[i]) {
+                    if(!first) printf(",");
+                    printf("%d", a[i]);
+                    first = 0;
+                }
+            }
+            printf(")\n");
+        } else {
+            printf("False");
+        }
+    }
+    return 0;
+}
